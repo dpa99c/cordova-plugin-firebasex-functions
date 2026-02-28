@@ -1,0 +1,14 @@
+{
+    "name": "cordova-plugin-firebasex-functions",
+    "version": "1.0.0",
+    "description": "Firebase Cloud Functions module for cordova-plugin-firebasex",
+    "license": "MIT",
+    "cordova": {
+        "id": "cordova-plugin-firebasex-functions",
+        "platforms": ["android", "ios"]
+    },
+    "keywords": ["cordova", "firebase", "functions", "cloud functions"],
+    "dependencies": {
+        "cordova-plugin-firebasex-core": ">=1.0.0"
+    }
+}
