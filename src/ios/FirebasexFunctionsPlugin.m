@@ -1,13 +1,32 @@
+/**
+ * @file FirebasexFunctionsPlugin.m
+ * @brief iOS implementation of the Firebase Cloud Functions Cordova plugin.
+ */
+
 #import "FirebasexFunctionsPlugin.h"
 #import "FirebasexCorePlugin.h"
 @import FirebaseFunctions;
 
 @implementation FirebasexFunctionsPlugin
 
+/**
+ * Called by Cordova when the plugin is first loaded. Logs initialisation.
+ */
 - (void)pluginInitialize {
     NSLog(@"FirebasexFunctionsPlugin pluginInitialize");
 }
 
+/**
+ * Invokes an HTTPS-callable Cloud Function.
+ *
+ * Runs asynchronously in the background. On success, returns the function's
+ * result data as a dictionary to the JS callback. On failure, sends an
+ * error result with the @c NSError description.
+ *
+ * @param command Cordova command with arguments:
+ *   - args[0] (NSString) - the Cloud Function name
+ *   - args[1] (id)       - arguments to pass to the function
+ */
 - (void)functionsHttpsCallable:(CDVInvokedUrlCommand *)command {
     [self.commandDelegate runInBackground:^{
         @try {

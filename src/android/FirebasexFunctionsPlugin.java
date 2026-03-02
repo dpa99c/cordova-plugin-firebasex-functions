@@ -20,13 +20,31 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 
+/**
+ * Cordova plugin for Firebase Cloud Functions on Android.
+ *
+ * <p>Provides a bridge to invoke HTTPS-callable Cloud Functions from the Cordova
+ * WebView. Supports returning data as JSON objects, arrays, integers, strings,
+ * or byte arrays. Errors from Cloud Functions (including structured error details)
+ * are propagated to the JavaScript error callback.
+ *
+ * @see <a href="https://firebase.google.com/docs/functions/callable">Cloud Functions - Call functions from your app</a>
+ */
 public class FirebasexFunctionsPlugin extends CordovaPlugin {
 
+    /** Log tag for all messages from this plugin. */
     private static final String TAG = "FirebasexFunctions";
 
+    /** Firebase Cloud Functions client instance. */
     private FirebaseFunctions functions;
+
+    /** Gson instance for converting Maps/Lists to JSON. */
     private Gson gson;
 
+    /**
+     * Initialises the plugin by obtaining the default Firebase Functions instance
+     * and creating a Gson serialiser.
+     */
     @Override
     protected void pluginInitialize() {
         Log.d(TAG, "pluginInitialize");
@@ -34,6 +52,14 @@ public class FirebasexFunctionsPlugin extends CordovaPlugin {
         gson = new Gson();
     }
 
+    /**
+     * Dispatches Cordova actions to plugin methods.
+     *
+     * <p>Supported actions:
+     * <ul>
+     *   <li>{@code "functionsHttpsCallable"} - invoke an HTTPS-callable Cloud Function</li>
+     * </ul>
+     */
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if ("functionsHttpsCallable".equals(action)) {
@@ -43,6 +69,24 @@ public class FirebasexFunctionsPlugin extends CordovaPlugin {
         return false;
     }
 
+    /**
+     * Calls an HTTPS-callable Cloud Function.
+     *
+     * <p>Arguments:
+     * <ul>
+     *   <li>args[0] (String) - the Cloud Function name</li>
+     *   <li>args[1] (any)    - the arguments to pass to the function</li>
+     * </ul>
+     *
+     * <p>On success, the function's return data is sent to the callback as the
+     * appropriate type (JSONObject, JSONArray, int, String, or byte[]).
+     * On failure, if the error is a {@link FirebaseFunctionsException} with details,
+     * those details are returned; otherwise the exception message is returned.
+     *
+     * @param args            the Cordova arguments array
+     * @param callbackContext the callback for success/error results
+     * @throws JSONException if argument parsing fails
+     */
     private void functionsHttpsCallable(JSONArray args, CallbackContext callbackContext) throws JSONException {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
@@ -103,11 +147,25 @@ public class FirebasexFunctionsPlugin extends CordovaPlugin {
         });
     }
 
+    /**
+     * Converts a Java Map to a {@link JSONObject} via Gson serialisation.
+     *
+     * @param map the map to convert
+     * @return the equivalent JSONObject
+     * @throws JSONException if the JSON string is malformed
+     */
     private JSONObject mapToJsonObject(Map<String, Object> map) throws JSONException {
         String jsonString = gson.toJson(map);
         return new JSONObject(jsonString);
     }
 
+    /**
+     * Converts a Java object (typically an ArrayList) to a {@link JSONArray} via Gson serialisation.
+     *
+     * @param object the object to convert
+     * @return the equivalent JSONArray
+     * @throws JSONException if the JSON string is malformed
+     */
     private JSONArray objectToJsonArray(Object object) throws JSONException {
         String jsonString = gson.toJson(object);
         return new JSONArray(jsonString);
