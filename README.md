@@ -29,9 +29,17 @@ or by running:
 
 **This module depends on `cordova-plugin-firebasex-core` which will be installed automatically as a dependency.**
 
+## Plugin variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `ANDROID_FIREBASE_FUNCTIONS_VERSION` | `22.1.0` | Android Firebase Functions SDK version. |
+| `ANDROID_GSON_VERSION` | `2.13.2` | Google Gson library version (Functions dependency). |
+| `IOS_FIREBASE_SDK_VERSION` | `12.9.0` | iOS Firebase SDK version (for functions pod). |
+
 # API
 
-The following methods are available via the `FirebasexFunctionsPlugin` global object.
+The following methods are available via the `FirebasexFunctions` global object.
 
 ## functionsHttpsCallable
 
@@ -51,7 +59,7 @@ var args = {
     arg1: "First argument",
     arg2: "second argument",
 };
-FirebasexFunctionsPlugin.functionsHttpsCallable(
+FirebasexFunctions.functionsHttpsCallable(
     functionName,
     args,
     function (result) {

@@ -1,4 +1,4 @@
-interface FirebasexFunctionsPlugin {
+interface FirebasexFunctions {
     functionsHttpsCallable(
         functionName: string,
         args: object,
