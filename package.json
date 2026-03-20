@@ -1,6 +1,6 @@
 {
     "name": "cordova-plugin-firebasex-functions",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Firebase Cloud Functions module for cordova-plugin-firebasex",
     "author": "Dave Alden",
     "license": "MIT",
