@@ -4,7 +4,7 @@
  */
 
 #import "FirebasexFunctionsPlugin.h"
-#import "FirebasexCorePlugin.h"
+@import cordova_plugin_firebasex_core;
 @import FirebaseFunctions;
 
 @implementation FirebasexFunctionsPlugin
