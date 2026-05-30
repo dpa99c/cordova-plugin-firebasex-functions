@@ -40,7 +40,9 @@
     </platform>
 
     <!-- iOS -->
-    <platform name="ios">
+    <platform name="ios" package="swift">
+        <hook type="before_plugin_install" src="scripts/ios/before_plugin_install.js" />
+
         <config-file target="config.xml" parent="/*">
             <feature name="FirebasexFunctionsPlugin">
                 <param name="ios-package" value="FirebasexFunctionsPlugin" />
@@ -58,7 +60,7 @@
                 <source url="https://cdn.cocoapods.org/" />
             </config>
             <pods use-frameworks="true">
-                <pod name="FirebaseFunctions" spec="12.9.0"/>
+                <pod name="FirebaseFunctions" spec="12.9.0" nospm="true"/>
             </pods>
         </podspec>
 
