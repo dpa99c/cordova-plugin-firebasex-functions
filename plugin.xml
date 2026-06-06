@@ -30,8 +30,8 @@
             </feature>
         </config-file>
 
-        <preference name="ANDROID_FIREBASE_FUNCTIONS_VERSION" default="22.1.0" />
-        <preference name="ANDROID_GSON_VERSION" default="2.13.2" />
+        <preference name="ANDROID_FIREBASE_FUNCTIONS_VERSION" default="22.1.1" />
+        <preference name="ANDROID_GSON_VERSION" default="2.14.0" />
 
         <framework src="com.google.firebase:firebase-functions:$ANDROID_FIREBASE_FUNCTIONS_VERSION" />
         <framework src="com.google.code.gson:gson:$ANDROID_GSON_VERSION" />
