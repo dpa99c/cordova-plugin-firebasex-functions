@@ -6,7 +6,7 @@ var packageSwiftTemplate = [
     "",
     "import PackageDescription",
     "",
-    "let firebaseSDKVersion: Version = \"12.9.0\"",
+    "let firebaseSDKVersion: Version = \"12.14.0\"",
     "",
     "let package = Package(",
     "    name: \"cordova-plugin-firebasex-functions\"",
