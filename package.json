@@ -4,6 +4,7 @@
     "description": "Firebase Cloud Functions module for cordova-plugin-firebasex",
     "author": "Dave Alden",
     "license": "MIT",
+    "types": "types/index.d.ts",
     "cordova": {
         "id": "cordova-plugin-firebasex-functions",
         "platforms": ["android", "ios"]
