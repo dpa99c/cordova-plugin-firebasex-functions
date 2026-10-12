@@ -21,6 +21,7 @@
  * @param command Cordova command with arguments:
  *   - args[0] (NSString) - the Cloud Function name
  *   - args[1] (id)       - arguments to pass to the function
+ *   - args[2] (NSString) - optional region overriding the default (may be NSNull)
  */
 - (void)functionsHttpsCallable:(CDVInvokedUrlCommand *)command;
 

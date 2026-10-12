@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="cordova-plugin-firebasex-functions"
-        version="2.0.2">
+        version="2.1.0">
 
     <name>cordova-plugin-firebasex-functions</name>
     <description>Firebase Cloud Functions module for cordova-plugin-firebasex</description>
@@ -28,8 +28,10 @@
                 <param name="android-package" value="org.apache.cordova.firebasex.FirebasexFunctionsPlugin" />
                 <param name="onload" value="true" />
             </feature>
+            <preference name="FirebasexFunctionsRegion" value="$FIREBASE_FUNCTIONS_REGION" />
         </config-file>
 
+        <preference name="FIREBASE_FUNCTIONS_REGION" default=" " />
         <preference name="ANDROID_FIREBASE_FUNCTIONS_VERSION" default="22.1.1" />
         <preference name="ANDROID_GSON_VERSION" default="2.14.0" />
 
@@ -48,7 +50,10 @@
                 <param name="ios-package" value="FirebasexFunctionsPlugin" />
                 <param name="onload" value="true" />
             </feature>
+            <preference name="FirebasexFunctionsRegion" value="$FIREBASE_FUNCTIONS_REGION" />
         </config-file>
+
+        <preference name="FIREBASE_FUNCTIONS_REGION" default=" " />
 
         <header-file src="src/ios/FirebasexFunctionsPlugin.h" />
         <source-file src="src/ios/FirebasexFunctionsPlugin.m" />

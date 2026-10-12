@@ -31,9 +31,22 @@ or by running:
 
 | Variable | Default | Description |
 |---|---|---|
+| `FIREBASE_FUNCTIONS_REGION` | _(SDK default: `us-central1`)_ | Default [region](https://firebase.google.com/docs/functions/locations) of your callable functions, e.g. `europe-west1`. Required if your functions are not deployed to `us-central1`; can be overridden per call (see [functionsHttpsCallable](#functionshttpscallable)). |
 | `ANDROID_FIREBASE_FUNCTIONS_VERSION` | `22.1.0` | Android Firebase Functions SDK version. |
 | `ANDROID_GSON_VERSION` | `2.13.2` | Google Gson library version (Functions dependency). |
 | `IOS_FIREBASE_SDK_VERSION` | `12.9.0` | iOS Firebase SDK version (for functions pod). |
+
+For example, if your functions are deployed to `europe-west1`:
+
+    cordova plugin add cordova-plugin-firebasex-functions --variable FIREBASE_FUNCTIONS_REGION=europe-west1
+
+or in `config.xml`:
+
+```xml
+<plugin name="cordova-plugin-firebasex-functions" spec="^2.1.0">
+    <variable name="FIREBASE_FUNCTIONS_REGION" value="europe-west1" />
+</plugin>
+```
 
 # API
 
@@ -50,6 +63,11 @@ Call a Firebase [HTTPS Callable function](https://firebase.google.com/docs/funct
 -   {function} success - callback function to call on successfully completing the function call.
     Will be passed an {object/array/string} containing the data returned by the function.
 -   {function} error - callback function which will be passed a {string/object} error message as an argument.
+-   {object} options - (optional) call options:
+    -   {string} region - region the function is deployed to (e.g. `"europe-west1"`). Overrides the `FIREBASE_FUNCTIONS_REGION` plugin variable for this call.
+
+If no region is given by either `options.region` or the `FIREBASE_FUNCTIONS_REGION` plugin variable, the Firebase SDK default region (`us-central1`) is used.
+Calling a function in the wrong region fails with a `NOT_FOUND` error.
 
 ```javascript
 var functionName = "myBackendFunction";
@@ -66,6 +84,19 @@ FirebasexFunctions.functionsHttpsCallable(
     function (error) {
         console.error("Error calling function: " + JSON.stringify(error));
     }
+);
+
+// Call a function deployed to a specific region
+FirebasexFunctions.functionsHttpsCallable(
+    "myRegionalFunction",
+    args,
+    function (result) {
+        console.log("Result: " + JSON.stringify(result));
+    },
+    function (error) {
+        console.error("Error: " + JSON.stringify(error));
+    },
+    { region: "europe-west1" }
 );
 ```
 

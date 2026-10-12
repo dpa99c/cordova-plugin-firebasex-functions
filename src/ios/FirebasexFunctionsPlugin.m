@@ -13,13 +13,43 @@
 #endif
 @import FirebaseFunctions;
 
-@implementation FirebasexFunctionsPlugin
+/** config.xml preference set from the FIREBASE_FUNCTIONS_REGION plugin variable. */
+static NSString *const kRegionPreference = @"FirebasexFunctionsRegion";
+
+@implementation FirebasexFunctionsPlugin {
+    /** Region from the FIREBASE_FUNCTIONS_REGION plugin variable, or nil for the SDK default. */
+    NSString *_defaultRegion;
+}
 
 /**
- * Called by Cordova when the plugin is first loaded. Logs initialisation.
+ * Called by Cordova when the plugin is first loaded. Reads the default region
+ * from the FIREBASE_FUNCTIONS_REGION plugin variable.
  */
 - (void)pluginInitialize {
     NSLog(@"FirebasexFunctionsPlugin pluginInitialize");
+    // Cordova lower-cases preference names in commandDelegate.settings.
+    id region = [self.commandDelegate.settings objectForKey:[kRegionPreference lowercaseString]];
+    _defaultRegion = [self normalizedRegion:region];
+}
+
+/**
+ * Returns a trimmed, non-empty region string, or nil.
+ */
+- (NSString *)normalizedRegion:(id)region {
+    if (![region isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    NSString *trimmed = [(NSString *)region stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    return trimmed.length > 0 ? trimmed : nil;
+}
+
+/**
+ * Returns the Functions instance for the given region, falling back to the
+ * plugin variable region and then to the SDK default instance.
+ */
+- (FIRFunctions *)functionsInstanceForRegion:(NSString *)region {
+    NSString *effectiveRegion = region ?: _defaultRegion;
+    return effectiveRegion ? [FIRFunctions functionsForRegion:effectiveRegion] : [FIRFunctions functions];
 }
 
 /**
@@ -32,13 +62,15 @@
  * @param command Cordova command with arguments:
  *   - args[0] (NSString) - the Cloud Function name
  *   - args[1] (id)       - arguments to pass to the function
+ *   - args[2] (NSString) - optional region overriding the default (may be NSNull)
  */
 - (void)functionsHttpsCallable:(CDVInvokedUrlCommand *)command {
     [self.commandDelegate runInBackground:^{
         @try {
             NSString *name = [command.arguments objectAtIndex:0];
             id arguments = [command.arguments objectAtIndex:1];
-            [[[FIRFunctions functions] HTTPSCallableWithName:name]
+            NSString *region = command.arguments.count > 2 ? [self normalizedRegion:[command.arguments objectAtIndex:2]] : nil;
+            [[[self functionsInstanceForRegion:region] HTTPSCallableWithName:name]
                 callWithObject:arguments
                     completion:^(FIRHTTPSCallableResult *_Nullable result,
                                  NSError *_Nullable error) {

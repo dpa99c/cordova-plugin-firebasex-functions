@@ -1,3 +1,9 @@
+# Version 2.1.0
+- feat: support callable functions deployed to a non-default region.
+    - New `FIREBASE_FUNCTIONS_REGION` plugin variable sets the default region (Android: `FirebaseFunctions.getInstance(region)`, iOS: `[FIRFunctions functionsForRegion:]`).
+    - New optional `options` argument for `functionsHttpsCallable()` with a `region` property to override it per call.
+    - Backwards compatible: without either, the SDK default region (`us-central1`) is used as before.
+
 # Version 2.0.2
 - fix: add types field to package.json so TypeScript resolves type definitions
 
