@@ -26,8 +26,20 @@ var SERVICE = "FirebasexFunctionsPlugin";
  * @param {function} error - Called with an error message or error details object on failure.
  *   If the Cloud Function threw a {@link https://firebase.google.com/docs/reference/functions/providers_https_#httpserror HttpsError}
  *   with details, those details are returned.
+ * @param {object} [options] - Optional call options.
+ * @param {string} [options.region] - Region the function is deployed to (e.g. "europe-west1").
+ *   Overrides the `FIREBASE_FUNCTIONS_REGION` plugin variable for this call.
+ *   If neither is set, the Firebase SDK default region (us-central1) is used.
  */
-exports.functionsHttpsCallable = function (name, args, success, error) {
+exports.functionsHttpsCallable = function (name, args, success, error, options) {
     if (typeof name !== "string") return error("'name' must be a string specifying the Cloud Function name");
-    exec(success, error, SERVICE, "functionsHttpsCallable", [name, args]);
+    var region = null;
+    if (options !== undefined && options !== null) {
+        if (typeof options !== "object") return error("'options' must be an object");
+        if (options.region !== undefined && options.region !== null) {
+            if (typeof options.region !== "string" || options.region.trim() === "") return error("'options.region' must be a non-empty string");
+            region = options.region.trim();
+        }
+    }
+    exec(success, error, SERVICE, "functionsHttpsCallable", [name, args, region]);
 };

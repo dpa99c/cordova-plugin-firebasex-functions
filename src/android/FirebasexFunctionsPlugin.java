@@ -35,21 +35,40 @@ public class FirebasexFunctionsPlugin extends CordovaPlugin {
     /** Log tag for all messages from this plugin. */
     private static final String TAG = "FirebasexFunctions";
 
-    /** Firebase Cloud Functions client instance. */
+    /** config.xml preference set from the {@code FIREBASE_FUNCTIONS_REGION} plugin variable. */
+    private static final String REGION_PREFERENCE = "FirebasexFunctionsRegion";
+
+    /** Firebase Cloud Functions client instance for the default region. */
     private FirebaseFunctions functions;
 
     /** Gson instance for converting Maps/Lists to JSON. */
     private Gson gson;
 
     /**
-     * Initialises the plugin by obtaining the default Firebase Functions instance
-     * and creating a Gson serialiser.
+     * Initialises the plugin by obtaining the Firebase Functions instance for the
+     * region set by the {@code FIREBASE_FUNCTIONS_REGION} plugin variable (or the
+     * SDK default region if not set) and creating a Gson serialiser.
      */
     @Override
     protected void pluginInitialize() {
         Log.d(TAG, "pluginInitialize");
-        functions = FirebaseFunctions.getInstance();
+        String region = preferences.getString(REGION_PREFERENCE, "").trim();
+        functions = region.isEmpty() ? FirebaseFunctions.getInstance() : FirebaseFunctions.getInstance(region);
         gson = new Gson();
+    }
+
+    /**
+     * Returns the Functions instance to use for a call: the given region if any,
+     * otherwise the default instance.
+     *
+     * @param region the region passed from JavaScript, or {@code null}
+     * @return the Firebase Functions instance
+     */
+    private FirebaseFunctions getFunctions(String region) {
+        if (region == null || region.trim().isEmpty()) {
+            return functions;
+        }
+        return FirebaseFunctions.getInstance(region.trim());
     }
 
     /**
@@ -76,6 +95,7 @@ public class FirebasexFunctionsPlugin extends CordovaPlugin {
      * <ul>
      *   <li>args[0] (String) - the Cloud Function name</li>
      *   <li>args[1] (any)    - the arguments to pass to the function</li>
+     *   <li>args[2] (String) - optional region overriding the default (may be null)</li>
      * </ul>
      *
      * <p>On success, the function's return data is sent to the callback as the
@@ -92,7 +112,8 @@ public class FirebasexFunctionsPlugin extends CordovaPlugin {
             public void run() {
                 try {
                     String name = args.getString(0);
-                    functions.getHttpsCallable(name)
+                    String region = args.length() > 2 && !args.isNull(2) ? args.getString(2) : null;
+                    getFunctions(region).getHttpsCallable(name)
                             .call(args.get(1))
                             .addOnSuccessListener(new OnSuccessListener<HttpsCallableResult>() {
                                 @Override
